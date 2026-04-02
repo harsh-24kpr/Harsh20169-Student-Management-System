@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap)" rel="stylesheet">
+    <style>
+        :root {
+            --pastel-pink: #FFD1DC;
+            --pastel-blue: #AEC6CF;
+            --pastel-green: #B5EAD7;
+            --pastel-lavender: #E0BBE4;
+            --pastel-peach: #FFDAB9;
+            --pastel-yellow: #FFFACD;
+            --pastel-mint: #C9F2C7;
+            --text-dark: #4A4A4A;
+            --text-light: #6B6B6B;
+            --white: #FFFFFF;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--pastel-lavender) 0%, var(--pastel-blue) 50%, var(--pastel-mint) 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--pastel-pink);
+            color: #8B4557;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #FFB6C1;
+            transform: scale(1.05);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-weight: 300;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash {
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .flash.success {
+            background: var(--pastel-green);
+            color: #2D5A3D;
+        }
+
+        .flash.error {
+            background: var(--pastel-pink);
+            color: #8B4557;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(to bottom, var(--pastel-pink), var(--pastel-lavender));
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-light);
+        }
+
+        input, select {
+            padding: 12px 16px;
+            border: 2px solid var(--pastel-blue);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--pastel-lavender);
+            box-shadow: 0 0 0 4px rgba(224, 187, 228, 0.2);
+        }
+
+        input::placeholder {
+            color: #B0B0B0;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-lavender));
+            color: var(--text-dark);
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(224, 187, 228, 0.4);
+        }
+
+        .btn-delete {
+            background: var(--pastel-pink);
+            color: #8B4557;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+
+        .btn-delete:hover {
+            background: #FFB6C1;
+            transform: scale(1.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, var(--pastel-blue), var(--pastel-mint));
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        th:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        th:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #F0F0F0;
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: var(--pastel-yellow);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-year {
+            background: var(--pastel-peach);
+            color: #8B6914;
+        }
+
+        .student-email {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            thead tr {
+                display: none;
+            }
+            
+            tr {
+                margin-bottom: 16px;
+                background: var(--pastel-yellow);
+                border-radius: 12px;
+                padding: 16px;
+            }
+            
+            td {
+                padding: 8px 0;
+                border: none;
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            td::before {
+                content: attr(data-label);
+                font-weight: 500;
+                color: var(--text-light);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Student Management</h1>
+            <p class="subtitle">Manage your students with ease</p>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="card">
+            <h2 class="card-title">Add New Student</h2>
+            <form action="{{ url_for('add') }}" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="roll">Roll Number</label>
+                        <input type="text" id="roll" name="roll" placeholder="12345" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="course">Course</label>
+                        <input type="text" id="course" name="course" placeholder="Computer Science" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Student</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">All Students</h2>
+            {% if students %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Roll</th>
+                            <th>Course</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td data-label="Name">
+                                <strong>{{ student.name }}</strong>
+                            </td>
+                            <td data-label="Roll">{{ student.roll }}</td>
+                            <td data-label="Course">{{ student.course }}</td>
+                            <td data-label="Action">
+                                <a href="{{ url_for('delete', id=student.id) }}" 
+                                   class="btn btn-delete"
+                                   onclick="return confirm('Delete this student?')">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎓</div>
+                    <p>No students yet. Add your first student above!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
